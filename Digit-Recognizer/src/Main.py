@@ -1,16 +1,15 @@
 # For more explanations to this script take a look at the Jupyter Notebook one folder above
 
 import sys
-sys.path.insert(0, '../../../Utilities') # https://github.com/LarsNeR/Utilities
+sys.path.insert(0, '../Utilities') # https://github.com/LarsNeR/Utilities
 from Utilities import *
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-get_ipython().run_line_magic('matplotlib', 'inline')
 
-df_train = pd.read_csv('./data/train.csv')
-df_test = pd.read_csv('./data/test.csv')
+df_train = pd.read_csv('Digit-Recognizer/data/train.csv')
+df_test = pd.read_csv('Digit-Recognizer/data/test.csv')
 df_train.head()
 
 first_image = df_train.iloc[0, 1:].values
@@ -92,13 +91,13 @@ _, clf_cnn2d = cross_validation_cnn2d(X_train, y_train, p)
 # Accuracy of around 98%
 
 ## Predicting
-df_test = pd.read_csv('./data/test.csv')
+df_test = pd.read_csv('Digit-Recognizer/data/test.csv')
 df_result = pd.DataFrame({'ImageId': np.arange(1, df_test.shape[0]+1)})
 df = preprocess_df(df_test)
 X_test = df.values
 X_test = np.reshape(X_test, (-1, 28, 28, 1))
 df_result['Label'] = np.argmax(clf_cnn2d.predict(X_test), axis=1)
-df_result.to_csv('./data/result_cnn2d.csv', index=False)
+df_result.to_csv('Digit-Recognizer/data/result_cnn2d.csv', index=False)
 
 
 #### Submitting them to Kaggle gave following results
@@ -148,13 +147,12 @@ X_train = np.reshape(X_train, (-1, 28, 28, 1))
 y_ohe = to_categorical(y_train, num_classes=10)
 _, clf_final = train_model_cnn2d(X_train, y_ohe,_, _, p,verbose=1)
 
-df_test = pd.read_csv('./data/test.csv')
+df_test = pd.read_csv('Digit-Recognizer/data/test.csv')
 df_result = pd.DataFrame({'ImageId': np.arange(1, df_test.shape[0]+1)})
 df = preprocess_df(df_test)
 X_test = df.values
 X_test = np.reshape(X_test, (-1, 28, 28, 1))
 df_result['Label'] = np.argmax(clf_final.predict(X_test), axis=1)
-df_result.to_csv('./data/result_final.csv', index=False)
-
+df_result.to_csv('Digit-Recognizer/data/result_final.csv', index=False)
 
 # Gives a result of 0.99157 (Rank 997)

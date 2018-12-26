@@ -1,13 +1,13 @@
 # For more explanations to this script take a look at the Jupyter Notebook one folder above
 
 import sys
-sys.path.insert(0, '../../../Utilities') # https://github.com/LarsNeR/Utilities
+sys.path.insert(0, '../Utilities') # https://github.com/LarsNeR/Utilities
 from Utilities import *
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-df_train = pd.read_csv('../data/train.csv')
+df_train = pd.read_csv('Titanic/data/train.csv')
 df_train.head()
 
 print(get_highly_correlating_columns(df_train, threshold=0.5))
@@ -213,18 +213,18 @@ y_pred[y_pred <= 0.5] = 0
 print("F1-Score: " + str(f1_score(y_test, y_pred)))
 
 ### Convert to Kaggle-Submission
-df_test = pd.read_csv('../data/test.csv')
+df_test = pd.read_csv('Titanic/data/test.csv')
 df_result = pd.DataFrame({'PassengerId': df_test['PassengerId']})
 df = preprocess_df(df_test)
 X_test = df.values
 
 clf_mlp.fit(X, y)
 df_result['Survived'] = clf_mlp.predict(X_test)
-df_result.to_csv('../data/result_mlp.csv', index=False)
+df_result.to_csv('Titanic/data/result_mlp.csv', index=False)
 
 clf_lr.fit(X, y)
 df_result['Survived'] = clf_lr.predict(X_test)
-df_result.to_csv('../data/result_lr.csv', index=False)
+df_result.to_csv('Titanic/data/result_lr.csv', index=False)
 
 clf_nn.fit(X, y)
 y_pred_nn = clf_nn.predict(X_test)
@@ -232,7 +232,7 @@ y_pred_nn[y_pred_nn > 0.5] = 1
 y_pred_nn[y_pred_nn <= 0.5] = 0
 df_result['Survived'] = y_pred_nn
 df_result['Survived'] = df_result['Survived'].astype(int)
-df_result.to_csv('../data/result_nn.csv', index=False)
+df_result.to_csv('Titanic/data/result_nn.csv', index=False)
 
 
 #### Submitting them to Kaggle gave following results
@@ -261,14 +261,14 @@ print("F1-Score: " + str(f1_score(y_test, y_pred)))
 
 ## Final run of MLP with these parameters
 from sklearn.neural_network import MLPClassifier
-df_test = pd.read_csv('../data/test.csv')
+df_test = pd.read_csv('Titanic/data/test.csv')
 df_result = pd.DataFrame({'PassengerId': df_test['PassengerId']})
 df = preprocess_df(df_test)
 X_test = df.values
 clf_mlp = MLPClassifier(hidden_layer_sizes=(24, 48, 12), solver='adam', max_iter=200, learning_rate='adaptive', alpha=0.005, activation='tanh')
 clf_mlp.fit(X, y)
 df_result['Survived'] = clf_mlp.predict(X_test)
-df_result.to_csv('../data/result_final.csv', index=False)
+df_result.to_csv('Titanic/data/result_final.csv', index=False)
 
 
 # Gives a result of 0.79904
